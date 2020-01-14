@@ -7,7 +7,7 @@ var toPull = require('stream-to-pull-stream')
 require('ssb-client')(function (err, sbot) {
   if(err) throw err
 
-  // %ROfzlOB7Z55klOxtwOK0xUgVJE7UKxplMDtVM0K6Ie0=.sha256
+  // %bnTRHCyFvPIgMndnCS0+Mq4UQJEdq0cSzgktKp3jAXk=.sha256
   
   /*
   pull(
@@ -38,7 +38,8 @@ require('ssb-client')(function (err, sbot) {
     return files
   }
 
-  var files = listDir(fs, "../ssb-lite/dist", [])
+  var originalDir = path.resolve("../ssb-lite/dist/")
+  var files = listDir(fs, originalDir, [])
   
   console.log("Found files:", files)
   
@@ -54,17 +55,16 @@ require('ssb-client')(function (err, sbot) {
       if (err) return console.error(err)
       console.log("Generated blobs:", blobIds)
 
-      var indexBlob = ''
+      var blobs = {}
       for (var i = 0; i < files.length; ++i) {
-        if (path.parse(files[i]).base == "index.html")
-          indexBlob = blobIds[i]
+        var relativePath = files[i].substring(originalDir.length+1)
+        blobs[relativePath] = blobIds[i]
       }
 
       var initial = {
         type: 'ssb-browser-app',
         name,
-        blobIds,
-        indexBlob,
+        blobs,
         changelog,
         version
       }
