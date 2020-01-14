@@ -1,0 +1,23 @@
+<html>
+  <head>
+    <title>SSB turtle</title>
+    <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0,viewport-fit=cover">
+    <link rel="stylesheet" type="text/css" href="css/main.css">
+  </head>
+  <body>
+    <div id="app">
+      <h1>SSB turtle demo</h1>
+
+      <div id="app">
+        <input style="padding: 5px; width: 30rem;" type="text" placeholder="app message id" v-on:keyup.enter="getapp" v-model="appId" />
+        <button v-on:click="getapp" class="clickbutton">Download app</button>
+      </div>
+    </div>
+  </body>
+
+  <script src="node_modules/vue/dist/vue.min.js"></script>
+  <script src="node_modules/ssb-browser-core/dist/bundle-core.js"></script>
+
+  <script src="js/main.js"></script>
+</html>
