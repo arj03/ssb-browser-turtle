@@ -16,7 +16,9 @@
   "devDependencies": {
     "ssb-client": "^4.7.9"
   },
-  "scripts": {},
+  "scripts": {
+    "build": "browserify --full-paths js/main.js > bundle-main.js"
+  },
   "author": "arj",
   "license": "beerware"
 }
