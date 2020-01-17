@@ -8,9 +8,10 @@
     "url": "git@github.com:arj03/ssb-browser-turtle.git"
   },
   "dependencies": {
+    "polyraf": "^1.1.0",
     "pull-stream": "^3.6.14",
-    "stream-to-pull-stream": "^1.7.3",
     "ssb-browser-core": "^1.2.1",
+    "stream-to-pull-stream": "^1.7.3",
     "vue": "^2.6.11"
   },
   "devDependencies": {
