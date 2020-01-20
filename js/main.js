@@ -29,7 +29,7 @@
       el: "#app",
       data: function() {
         return {
-          appId: "%bnTRHCyFvPIgMndnCS0+Mq4UQJEdq0cSzgktKp3jAXk=.sha256"
+          appId: "%bnTRHCyFvPIgMndnCS0+Mq4UQJEdq0cSzgktKp3jAXk=.sha256|@Oh2NQslutj+XQRJkkfzKr6gw5mt49mdYY43Rs33y3yY=.ed25519"
         }
       },
       methods: {
@@ -38,12 +38,16 @@
           if (this.appId != '' && this.appId.startsWith('%')) {
             SSB.remoteAddress = 'ws:localhost:8989~shs:Oh2NQslutj+XQRJkkfzKr6gw5mt49mdYY43Rs33y3yY=.ed25519' // FIXME
             SSB.connected((rpc) => {
-              rpc.getThread.get(this.appId, (err, messages) => {
+              let author, appRootId
+              [appRootId, author] = this.appId.split('|')
+              rpc.getThread.get(appRootId, (err, messages) => {
                 if (err) return alert("Unable to download application message")
 
-                // FIXME this should find latest version by author or some other form of definition of who gets to release new versions
-                const message = messages[0]
+                const message = messages.filter(x => x.author == author).pop()
                 console.log(message)
+
+                SSB.state = SSB.validate.appendOOO(SSB.state, null, message)
+                if (SSB.state.error) throw SSB.state.error
 
                 const blobsDir = path.join('~/.ssb/', self.appId, self.appId)
                 console.log(blobsDir)
