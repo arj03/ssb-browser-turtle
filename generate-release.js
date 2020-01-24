@@ -68,6 +68,9 @@ require('ssb-client')(function (err, sbot) {
         changelog,
         version
       }
+
+      // FIXME: add image
+      // FIXME: add link to previous version
       
       console.log(initial)
 
