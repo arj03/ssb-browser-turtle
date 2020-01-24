@@ -52,12 +52,15 @@
                 const message = messages.filter(x => x.author == author).pop()
                 console.log(message)
 
+                // FIXME: show app for approval
+
                 SSB.state = SSB.validate.appendOOO(SSB.state, null, message)
                 if (SSB.state.error) throw SSB.state.error
 
                 const blobsDir = path.join('~/.ssb/', self.appId, self.appId)
                 console.log(blobsDir)
 
+                // FIXME: get name from message
                 var currentCache = 'ssb-browser-demo'
                 navigator.serviceWorker.controller.postMessage(currentCache)
 
@@ -66,7 +69,7 @@
                     pull.values(Object.keys(message.content.blobs)),
                     pull.asyncMap((appPath, cb) => {
                       cache.match(appPath).then(function(response) {
-                        if (response != null) return cb()
+                        if (response != null) return cb() // FIXME: check size here probably
 
                         const blobId = message.content.blobs[appPath]
                         console.log(`path: ${appPath} is blob: ${blobId}`)
