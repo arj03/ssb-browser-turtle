@@ -100,6 +100,10 @@
                       if (err) return alert(err)
                       console.log("verified and cached all blobs")
 
+                      var apps = JSON.parse(localStorage['apps'] || "{}")
+                      apps[currentCache] = { name: currentCache, blobsDir }
+                      localStorage['apps'] = JSON.stringify(apps)
+
                       const indexFile = raf(path.join(blobsDir, "index.html"))
                       indexFile.stat((err, stat) => {
                         indexFile.read(0, stat.size, (err, data) => {
