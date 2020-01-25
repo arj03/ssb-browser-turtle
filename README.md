@@ -5,3 +5,8 @@ SSB-turtle is a way to run multiple
 from the same domain. Instead of having a central store for apps, you
 load apps from your friends. All data for the apps are fetched as
 messages and blobs and stored locally so the apps can run offline.
+
+![Screenshot of ssb turtle][screenshot]
+
+[screenshot]: assets/screenshot.jpg
+
