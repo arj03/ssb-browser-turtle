@@ -65,11 +65,11 @@
         },
         getapp: function() {
           var self = this
-          if (this.appId != '' && this.appId.startsWith('%')) {
+          if (self.appId != '' && self.appId.startsWith('%')) {
             SSB.remoteAddress = 'ws:localhost:8989~shs:Oh2NQslutj+XQRJkkfzKr6gw5mt49mdYY43Rs33y3yY=.ed25519' // FIXME
             SSB.connected((rpc) => {
               let author, appRootId
-              [appRootId, author] = this.appId.split('|')
+              [appRootId, author] = self.appId.split('|')
               rpc.getThread.get(appRootId, (err, messages) => {
                 if (err) return alert("Unable to download application message")
 
@@ -84,11 +84,10 @@
                 const blobsDir = path.join('~/.ssb/', self.appId, self.appId)
                 console.log(blobsDir)
 
-                // FIXME: get name from message
-                var currentCache = 'ssb-browser-demo'
-                navigator.serviceWorker.controller.postMessage(currentCache)
+                const appName = message.content.name
+                navigator.serviceWorker.controller.postMessage(appName)
 
-                caches.open(currentCache).then(function(cache) {
+                caches.open(appName).then(function(cache) {
                   pull(
                     pull.values(Object.keys(message.content.blobs)),
                     pull.asyncMap((appPath, cb) => {
@@ -126,14 +125,14 @@
                       console.log("verified and cached all blobs")
 
                       var apps = JSON.parse(localStorage['apps'] || "{}")
-                      apps[currentCache] = { name: currentCache, blobsDir }
+                      apps[appName] = { name: appName, blobsDir }
                       localStorage['apps'] = JSON.stringify(apps)
 
-                      this.apps = []
+                      self.apps = []
                       for (var key in apps)
-                        this.apps.push(apps[key])
+                        self.apps.push(apps[key])
 
-                      this.loadapp(blobsDir)
+                      self.loadapp(appName, blobsDir)
                     })
                   )
                 })
