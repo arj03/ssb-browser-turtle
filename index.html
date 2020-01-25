@@ -11,10 +11,17 @@
 
       <img style="width: 500px;" src="turtle.png"/>
 
-      <div id="app">
+      <div>
         <input style="padding: 5px; width: 30rem;" type="text" placeholder="app message id" v-on:keyup.enter="getapp" v-model="appId" />
         <button v-on:click="getapp" class="clickbutton">Download app</button>
       </div>
+
+      <h1>Locally cached apps</h1>
+      <ul style="list-style: none;">
+        <li v-for="app in apps">
+          <button class="clickbutton" v-on:click="loadapp(app.name, app.blobsDir)">{{ app.name }}</button>
+        </li>
+      </ul>
     </div>
   </body>
 

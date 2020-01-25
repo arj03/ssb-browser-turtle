@@ -35,10 +35,34 @@
       el: "#app",
       data: function() {
         return {
-          appId: "%tf+DpegXvexYmuXzB+D7AS+50UcXPjJPgZXNiw8S7jM=.sha256|@Oh2NQslutj+XQRJkkfzKr6gw5mt49mdYY43Rs33y3yY=.ed25519"
+          appId: "%tf+DpegXvexYmuXzB+D7AS+50UcXPjJPgZXNiw8S7jM=.sha256|@Oh2NQslutj+XQRJkkfzKr6gw5mt49mdYY43Rs33y3yY=.ed25519",
+          apps: []
         }
       },
+      created: function () {
+        const localApps = JSON.parse(localStorage['apps'] || "{}")
+
+        this.apps = []
+        for (var key in localApps)
+          this.apps.push(localApps[key])
+      },
       methods: {
+        loadapp: function(name, blobsDir) {
+          navigator.serviceWorker.controller.postMessage(name)
+
+          const indexFile = raf(path.join(blobsDir, "index.html"))
+          indexFile.stat((err, stat) => {
+            indexFile.read(0, stat.size, (err, data) => {
+              if (err) throw err
+
+              var indexHTML = data.toString()
+
+              document.open()
+              document.write(indexHTML)
+              document.close()
+            })
+          })
+        },
         getapp: function() {
           var self = this
           if (this.appId != '' && this.appId.startsWith('%')) {
@@ -98,24 +122,18 @@
                     }),
                     pull.collect((err, msgs) => {
                       if (err) return alert(err)
+
                       console.log("verified and cached all blobs")
 
                       var apps = JSON.parse(localStorage['apps'] || "{}")
                       apps[currentCache] = { name: currentCache, blobsDir }
                       localStorage['apps'] = JSON.stringify(apps)
 
-                      const indexFile = raf(path.join(blobsDir, "index.html"))
-                      indexFile.stat((err, stat) => {
-                        indexFile.read(0, stat.size, (err, data) => {
-                          if (err) throw err
+                      this.apps = []
+                      for (var key in apps)
+                        this.apps.push(apps[key])
 
-                          var indexHTML = data.toString()
-
-                          document.open()
-                          document.write(indexHTML)
-                          document.close()
-                        })
-                      })
+                      this.loadapp(blobsDir)
                     })
                   )
                 })
