@@ -4,6 +4,7 @@
     <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
     <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0,viewport-fit=cover">
     <link rel="stylesheet" type="text/css" href="css/main.css">
+    <link rel="stylesheet" type="text/css" href="css/modal.css">
   </head>
   <body>
     <div id="app">
@@ -30,6 +31,35 @@
           </div>
         </li>
       </ul>
+
+      <transition name="modal" v-if="showNewAppModal" style="display: none;">
+        <div class="modal-mask">
+          <div class="modal-wrapper">
+            <div class="modal-container">
+              <div>
+                <h2>{{ newAppMessage.name }}</h2>
+              </div>
+
+              <div class="modal-body">
+                <b>Description</b>: {{ newAppMessage.description }} <br>
+                <b>Author</b>: {{ newAppMessage.author }} <br>
+                <b>Version</b>: {{ newAppMessage.version }} <br>
+                <img class="image" style="margin-left: auto; margin-right: auto; display: block;" v-bind:src="SSB.net.blobs.remoteURL(newAppMessage.screenshot)" />
+              </div>
+
+              <div class="modal-footer">
+                <button class="clickButton" @click="showNewAppModal = false">
+                  Close
+                </button>
+                <button class="modal-default-button clickButton" v-on:click="loadNewApp">
+                  Load app
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </transition>
+
     </div>
   </body>
 

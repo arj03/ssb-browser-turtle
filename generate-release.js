@@ -21,10 +21,12 @@ require('ssb-client')(function (err, sbot) {
   // FIXME: add root as input for updates
   // FIXME: add dir as input
 
-  var name = "ssb-browser-demo"
-  var changelog = "Initial version"
-  var version = "1.0.0"
-  var screenshot = "&upNcJAFyxcpuJe2m8JZOCUIM11Yl29Z3u58pFqbk5R4=.sha256" // sbot blobs.add "ssb-browser-demo-screenshot.jpg"
+  const name = "ssb-browser-demo"
+  const author = "@6CAxOI3f+LUOVrbAl0IemqiS7ATpQvr9Mdw9LC4+Uv0=.ed25519"
+  const description = "A simple secure scuttlebutt client"
+  const changelog = ""
+  const version = "1.0.0"
+  const screenshot = "&upNcJAFyxcpuJe2m8JZOCUIM11Yl29Z3u58pFqbk5R4=.sha256" // sbot blobs.add "ssb-browser-demo-screenshot.jpg"
 
   function listDir(fs, dir, files)
   {
@@ -68,7 +70,9 @@ require('ssb-client')(function (err, sbot) {
         blobs,
         changelog,
         version,
-        screenshot
+        screenshot,
+        description,
+        author
       }
 
       // FIXME: add link to previous version (see root higher up), not sure about branch
