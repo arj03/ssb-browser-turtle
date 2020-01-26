@@ -5,7 +5,7 @@
 
   if (location.protocol === 'https:' && 'serviceWorker' in navigator) {
     window.addEventListener('load', function() {
-      navigator.serviceWorker.register('sw.js');
+      navigator.serviceWorker.register('sw.js')
     })
   }
 
