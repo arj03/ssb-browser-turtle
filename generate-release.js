@@ -18,7 +18,7 @@ require('ssb-client')(function (err, sbot) {
   )
   */
   
-  // FIXME: add rootId as input for updates
+  // FIXME: add root as input for updates
   // FIXME: add dir as input
 
   var name = "ssb-browser-demo"
@@ -71,7 +71,7 @@ require('ssb-client')(function (err, sbot) {
         screenshot
       }
 
-      // FIXME: add link to previous version (see input)
+      // FIXME: add link to previous version (see root higher up), not sure about branch
       
       console.log(initial)
 
