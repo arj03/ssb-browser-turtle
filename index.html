@@ -19,7 +19,15 @@
       <h1>Locally cached apps</h1>
       <ul style="list-style: none;">
         <li v-for="app in apps">
-          <button class="clickbutton" v-on:click="loadapp(app.name, app.blobsDir)">{{ app.name }}</button>
+          <div class="container" v:if="app.screenshot" >
+            <img class="image" v-bind:src="SSB.net.blobs.remoteURL(app.screenshot)" />
+            <div class="middle">
+              <button class="clickbutton" v-on:click="loadapp(app.name, app.blobsDir)">{{ app.name }}</button>
+            </div>
+          </div>
+          <div v-else>
+            <button class="clickbutton" v-on:click="loadapp(app.name, app.blobsDir)">{{ app.name }}</button>
+          </div>
         </li>
       </ul>
     </div>

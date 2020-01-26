@@ -24,6 +24,7 @@ require('ssb-client')(function (err, sbot) {
   var name = "ssb-browser-demo"
   var changelog = "Initial version"
   var version = "1.0.0"
+  var screenshot = "&upNcJAFyxcpuJe2m8JZOCUIM11Yl29Z3u58pFqbk5R4=.sha256" // sbot blobs.add "ssb-browser-demo-screenshot.jpg"
 
   function listDir(fs, dir, files)
   {
@@ -42,7 +43,7 @@ require('ssb-client')(function (err, sbot) {
   var files = listDir(fs, originalDir, [])
   
   console.log("Found files:", files)
-  
+
   pull(
     pull.values(files),
     pull.asyncMap((file, cb) => {
@@ -66,11 +67,11 @@ require('ssb-client')(function (err, sbot) {
         name,
         blobs,
         changelog,
-        version
+        version,
+        screenshot
       }
 
-      // FIXME: add image
-      // FIXME: add link to previous version
+      // FIXME: add link to previous version (see input)
       
       console.log(initial)
 

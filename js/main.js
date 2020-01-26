@@ -35,11 +35,13 @@
       el: "#app",
       data: function() {
         return {
-          appId: "%tf+DpegXvexYmuXzB+D7AS+50UcXPjJPgZXNiw8S7jM=.sha256|@Oh2NQslutj+XQRJkkfzKr6gw5mt49mdYY43Rs33y3yY=.ed25519",
+          appId: "%oKTSo2yn5whABVgCmg0/y3zeXeBCTecsVQZ3jJ52nGo=.sha256|@Oh2NQslutj+XQRJkkfzKr6gw5mt49mdYY43Rs33y3yY=.ed25519",
           apps: []
         }
       },
       created: function () {
+        SSB.remoteAddress = 'ws:localhost:8989~shs:Oh2NQslutj+XQRJkkfzKr6gw5mt49mdYY43Rs33y3yY=.ed25519' // FIXME
+
         const localApps = JSON.parse(localStorage['apps'] || "{}")
 
         this.apps = []
@@ -66,7 +68,6 @@
         getapp: function() {
           var self = this
           if (self.appId != '' && self.appId.startsWith('%')) {
-            SSB.remoteAddress = 'ws:localhost:8989~shs:Oh2NQslutj+XQRJkkfzKr6gw5mt49mdYY43Rs33y3yY=.ed25519' // FIXME
             SSB.connected((rpc) => {
               let author, appRootId
               [appRootId, author] = self.appId.split('|')
@@ -119,13 +120,13 @@
                         })
                       })
                     }),
-                    pull.collect((err, msgs) => {
+                    pull.collect((err) => {
                       if (err) return alert(err)
 
                       console.log("verified and cached all blobs")
 
                       var apps = JSON.parse(localStorage['apps'] || "{}")
-                      apps[appName] = { name: appName, blobsDir }
+                      apps[appName] = { name: appName, blobsDir, screenshot: message.content.screenshot }
                       localStorage['apps'] = JSON.stringify(apps)
 
                       self.apps = []
