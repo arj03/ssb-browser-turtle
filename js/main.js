@@ -35,7 +35,8 @@
       el: "#app",
       data: function() {
         return {
-          appId: "%jpaonnR2ch5X/sYJr3nAK0RpZkNtKoa7hgjyIoMwDrY=.sha256|@Oh2NQslutj+XQRJkkfzKr6gw5mt49mdYY43Rs33y3yY=.ed25519",
+          appId: "%OLMcT/yciEB3rFLaNa50Ta7ZSwwPdEgyEo9WUGejJLs=.sha256|@6CAxOI3f+LUOVrbAl0IemqiS7ATpQvr9Mdw9LC4+Uv0=.ed25519",
+          remoteAddress: 'wss:between-two-worlds.dk:8989~shs:lbocEWqF2Fg6WMYLgmfYvqJlMfL7hiqVAV6ANjHWNw8=.ed25519',
           appDir: '',
           appVersion: '',
           apps: [],
@@ -46,7 +47,7 @@
         }
       },
       created: function () {
-        SSB.remoteAddress = 'ws:localhost:8989~shs:Oh2NQslutj+XQRJkkfzKr6gw5mt49mdYY43Rs33y3yY=.ed25519' // FIXME
+        SSB.remoteAddress = this.remoteAddress
 
         const localApps = JSON.parse(localStorage['apps'] || "{}")
 

@@ -10,11 +10,14 @@
     <div id="app">
       <h1>SSB turtle demo</h1>
 
-      <img style="width: 500px;" src="turtle.png"/>
+      <img style="width: 200px;" src="hermies.gif"/>
+      <img style="width: 500px;" src="turtle-flipped.png"/>
 
       <div>
         <input style="padding: 5px; width: 30rem;" type="text" placeholder="app message id" v-on:keyup.enter="getapp" v-model="appId" />
         <button v-on:click="getapp" class="clickbutton">Download app</button>
+        <br><br>
+        Remote:<input style="margin-left: 10px; padding: 5px; width: 34.9rem;" type="text" placeholder="remote peer" v-model="remoteAddress" />
       </div>
 
       <h1>Locally cached apps</h1>
