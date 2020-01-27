@@ -7,26 +7,26 @@ var toPull = require('stream-to-pull-stream')
 require('ssb-client')(function (err, sbot) {
   if(err) throw err
 
-  // %bnTRHCyFvPIgMndnCS0+Mq4UQJEdq0cSzgktKp3jAXk=.sha256
-  
-  /*
-  pull(
-    sbot.createHistoryStream({id: sbot.id}),
-    pull.collect((err, msgs) => {
-      console.log(JSON.stringify(msgs))
-    })
-  )
-  */
-  
-  // FIXME: add root as input for updates
-  // FIXME: add dir as input
+  var program = require('commander')
 
-  const name = "ssb-browser-demo"
-  const author = "@6CAxOI3f+LUOVrbAl0IemqiS7ATpQvr9Mdw9LC4+Uv0=.ed25519"
-  const description = "A simple secure scuttlebutt client"
-  const changelog = ""
-  const version = "1.0.0"
-  const screenshot = "&upNcJAFyxcpuJe2m8JZOCUIM11Yl29Z3u58pFqbk5R4=.sha256" // sbot blobs.add "ssb-browser-demo-screenshot.jpg"
+  program
+    .requiredOption('--dir [value]', 'The directory containing the application')
+    .option('-t, --title [value]', 'Application title')
+    .option('-a, --author [value]', 'The author of the application')
+    .option('-d, --desc [value]', 'The description of the application')
+    .requiredOption('-v, --appversion [value]', 'Application version')
+    .option('-c, --changelog [value]', 'A changelog for the specified version')
+    .option('-s, --screenshot [value]', 'The hash (sbot blobs.add) of a screenshot for the application')
+    .option('-r, --root [value]', 'The root message of the thread or this application')
+    .option('-b, --branch [value]', 'The previous message of the thread for this application')
+
+  program.on('--help', function(){
+    console.log('')
+    console.log('If --root is specified title, author, description, screenshot and branch will automatically be extracted from previous message')
+    console.log('')
+  })
+
+  program.parse(process.argv);
 
   function listDir(fs, dir, files)
   {
@@ -41,7 +41,7 @@ require('ssb-client')(function (err, sbot) {
     return files
   }
 
-  var originalDir = path.resolve("../ssb-lite/dist/")
+  var originalDir = path.resolve(program.dir)
   var files = listDir(fs, originalDir, [])
   
   console.log("Found files:", files)
@@ -64,24 +64,70 @@ require('ssb-client')(function (err, sbot) {
         blobs[relativePath] = blobIds[i]
       }
 
-      var initial = {
-        type: 'ssb-browser-app',
-        name,
-        blobs,
-        changelog,
-        version,
-        screenshot,
-        description,
-        author
+      function postMsg(program) {
+        if (!program.title || !program.author)
+        {
+          console.error("Unable to post, application must have at least title and author")
+          return
+        }
+
+        var msg = {
+          type: 'ssb-browser-app',
+          name: program.title,
+          blobs,
+          version: program.appversion,
+          author: program.author
+        }
+
+        if (program.changelog)
+          msg.changelog = program.changelog
+        if (program.desc)
+          msg.description = program.desc
+        if (program.screenshot)
+          msg.screenshot = program.screenshot
+        if (program.root)
+          msg.root = program.root
+        if (program.branch)
+          msg.branch = program.branch
+
+        sbot.publish(msg, (err, appMsg) => {
+          console.log(appMsg)
+        })
       }
-
-      // FIXME: add link to previous version (see root higher up), not sure about branch
       
-      console.log(initial)
+      if (program.root) {
+        pull(
+          sbot.query.read({
+            query: [{
+              $filter: {
+                value: {
+                  content: { root: program.root },
+                }
+              }
+            }]
+          }),
+          pull.filter((msg) => msg.value.content.type == 'ssb-browser-app'),
+          pull.collect((err, msgs) => {
+            if (err) throw err
 
-      sbot.publish(initial, (err, msg) => {
-        console.log(msg)
-      })
+            var lastMsg = msgs[msgs.length-1]
+
+            if (program.author == undefined && lastMsg.value.author)
+              program.author = lastMsg.value.author
+            if (program.title == undefined && lastMsg.value.content.name)
+              program.title = lastMsg.value.content.name
+            if (program.desc == undefined && lastMsg.value.content.description)
+              program.desc = lastMsg.value.content.description
+            if (program.screenshot == undefined && lastMsg.value.content.screenshot)
+              program.screenshot = lastMsg.value.content.screenshot
+
+            program.branch = lastMsg.key
+
+            postMsg(program)
+          })
+        )
+      } else
+        postMsg(program)
 
       sbot.close()
     })
