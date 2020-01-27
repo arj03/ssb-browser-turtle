@@ -23,6 +23,8 @@ rimraf("dist", function () {
 
   // other
   fs.copyFileSync('js/sw.js', 'dist/sw.js')
+  fs.copyFileSync('hermies.gif', 'dist/hermies.gif')
+  fs.copyFileSync('turtle-flipped.png', 'dist/turtle-flipped.png')
 
   pull(
     pull.values(html.split('\n')),
