@@ -10,3 +10,9 @@ messages and blobs and stored locally so the apps can run offline.
 
 [screenshot]: assets/screenshot.jpg
 
+## Running locally
+
+`npm run build` will compile the javascript. `write-dist.js` can be
+used to prepare all the files needed in the dist dir in a
+cache-busting friendly manner. To test locally it is recommended to
+run a http server from this directory.
