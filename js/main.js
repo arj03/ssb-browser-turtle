@@ -2,8 +2,9 @@
   const path = require('path')
   const raf = require('polyraf')
   const pull = require('pull-stream')
+  const sort = require('ssb-sort')
 
-  if (location.protocol === 'https:' && 'serviceWorker' in navigator) {
+  if ((location.hostname == 'localhost' || location.protocol === 'https:') && 'serviceWorker' in navigator) {
     window.addEventListener('load', function() {
       navigator.serviceWorker.register('sw.js')
     })
@@ -76,10 +77,13 @@
             SSB.connected((rpc) => {
               let author, appRootId
               [appRootId, author] = self.appId.split('|')
+              console.log("app id", appRootId)
               rpc.getThread.get(appRootId, (err, messages) => {
                 if (err) return alert("Unable to download application message")
 
-                const message = messages.filter(x => x.author == author).pop()
+                let validMessages = messages.filter(x => x.content.type == "ssb-browser-app" && x.author == author)
+
+                const message = sort(validMessages).pop()
                 console.log(message)
 
                 SSB.state = SSB.validate.appendOOO(SSB.state, null, message)
