@@ -47,11 +47,15 @@
           newAppMessage: ''
         }
       },
+      watch: {
+        remoteAddress: function(val) {
+          SSB.remoteAddress = val
+        }
+      },
       created: function () {
         SSB.remoteAddress = this.remoteAddress
 
         const localApps = JSON.parse(localStorage['apps'] || "{}")
-
         this.apps = Object.values(localApps)
       },
       methods: {
@@ -77,7 +81,6 @@
             SSB.connected((rpc) => {
               let author, appRootId
               [appRootId, author] = self.appId.split('|')
-              console.log("app id", appRootId)
               rpc.getThread.get(appRootId, (err, messages) => {
                 if (err) return alert("Unable to download application message")
 
