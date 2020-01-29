@@ -91,6 +91,7 @@ require('ssb-client')(function (err, sbot) {
           msg.branch = program.branch
 
         sbot.publish(msg, (err, appMsg) => {
+          if (err) console.error(err)
           console.log(appMsg)
         })
       }
