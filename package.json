@@ -21,7 +21,7 @@
     "ssb-client": "^4.7.9"
   },
   "scripts": {
-    "build": "browserify --full-paths js/main.js > bundle-main.js"
+    "build": "browserify --full-paths js/main.js > bundle-main.js && node write-dist.js"
   },
   "author": "arj",
   "license": "beerware"
