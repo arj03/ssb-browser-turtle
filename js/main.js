@@ -37,7 +37,7 @@
       data: function() {
         return {
           appId: "%OLMcT/yciEB3rFLaNa50Ta7ZSwwPdEgyEo9WUGejJLs=.sha256|@6CAxOI3f+LUOVrbAl0IemqiS7ATpQvr9Mdw9LC4+Uv0=.ed25519",
-          remoteAddress: 'wss:between-two-worlds.dk:8989~shs:lbocEWqF2Fg6WMYLgmfYvqJlMfL7hiqVAV6ANjHWNw8=.ed25519',
+          remoteAddress: 'wss:between-two-worlds.dk:8989~shs:lbocEWqF2Fg6WMYLgmfYvqJlMfL7hiqVAV6ANjHWNw8=',
           appDir: '',
           appVersion: '',
           apps: [],
@@ -49,11 +49,19 @@
       },
       watch: {
         remoteAddress: function(val) {
-          SSB.remoteAddress = val
+          var s = this.remoteAddress.split(":")
+          SSB.net.connectAndRemember(this.remoteAddress, {
+            key: '@' + s[s.length-1] + '.ed25519',
+            type: 'pub'
+          })
         }
       },
       created: function () {
-        SSB.remoteAddress = this.remoteAddress
+        var s = this.remoteAddress.split(":")
+        SSB.net.connectAndRemember(this.remoteAddress, {
+          key: '@' + s[s.length-1] + '.ed25519',
+          type: 'pub'
+        })
 
         const localApps = JSON.parse(localStorage['apps'] || "{}")
         this.apps = Object.values(localApps)
@@ -78,19 +86,19 @@
         getapp: function() {
           var self = this
           if (self.appId != '' && self.appId.startsWith('%')) {
-            SSB.connected((rpc) => {
-              let author, appRootId
-              [appRootId, author] = self.appId.split('|')
-              rpc.getThread.get(appRootId, (err, messages) => {
-                if (err) return alert("Unable to download application message")
+            let rpc = SSB.getPeer()
+            let author, appRootId
+            [appRootId, author] = self.appId.split('|')
+            rpc.partialReplication.getTangle(appRootId, (err, messages) => {
+              if (err) return alert("Unable to download application message")
 
-                let validMessages = messages.filter(x => x.content.type == "ssb-browser-app" && x.author == author)
+              let validMessages = messages.filter(x => x.content.type == "ssb-browser-app" && x.author == author)
 
-                const message = sort(validMessages).pop()
-                console.log(message)
+              const message = sort(validMessages).pop()
+              console.log(message)
 
-                SSB.state = SSB.validate.appendOOO(SSB.state, null, message)
-                if (SSB.state.error) throw SSB.state.error
+              SSB.state = SSB.db.addOOO(message, (err) => {
+                if (err) throw err
 
                 self.appDir = appRootId
                 self.appVersion = appRootId
